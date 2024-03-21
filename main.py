@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from src.database import Base, db_control
 import uvicorn
-
+from src.product.views import router as product_router
 from fastapi import FastAPI
 
 
@@ -13,6 +13,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(product_router)
 
 
 @app.get("/")
