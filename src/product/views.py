@@ -19,7 +19,7 @@ async def get_product(
     return product
 
 
-@router.post('/', response_model=list[Product], status_code=status.HTTP_201_CREATED)
+@router.post('/', response_model=Product, status_code=status.HTTP_201_CREATED)
 async def create_product(product: ProductCreate, session: AsyncSession = Depends(db_control.session_dependency)):
     return await crud.create_product(session, product=product)
 
