@@ -1,8 +1,9 @@
+from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.database import Product
-from .shemas import ProductCreate
+from .shemas import ProductCreate, ProductUpdate, ProductDelete, ProductUpdatePartial
 
 
 async def get_products(session: AsyncSession) -> list[Product]:
@@ -21,3 +22,22 @@ async def create_product(session: AsyncSession, product: ProductCreate) -> Produ
     session.add(product)
     await session.commit()
     return product
+
+
+async def update_product(
+        session: AsyncSession,
+        product: Product,
+        product_up: ProductUpdatePartial,
+        partial: bool = False) -> Product:
+    for name, value in product_up.model_dump(exclude_unset=partial).items():
+        setattr(product, name, value)
+    await session.commit()
+    return product
+
+
+async def delete_product(
+        session: AsyncSession,
+        product: Product,
+) -> None:
+    await session.delete(product)
+    await session.commit()

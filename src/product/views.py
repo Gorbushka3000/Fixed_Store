@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from .dependens import get_product_by_id
 from . import crud
-from .shemas import Product, ProductCreate
+from .shemas import Product, ProductCreate, ProductUpdate, ProductUpdatePartial
 from src.database import db_control
 
 router = APIRouter(tags=["Products"], prefix='/product')
@@ -13,18 +13,39 @@ async def get_products(session: AsyncSession = Depends(db_control.session_depend
     return await crud.get_products(session=session)
 
 
-@router.get('/{product_id}/', response_model=list[Product])
-async def get_product(product_id: int, session: AsyncSession = Depends(db_control.session_dependency)):
-    product = await crud.get_product(session=session, product_id=product_id)
-    if product is not None:
-        return product
+@router.get('/{product_id}/', response_model=Product)
+async def get_product(
+        product: Product = Depends(get_product_by_id)):
+    return product
 
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f'Product {product_id} not found!'
+
+@router.post('/', response_model=list[Product], status_code=status.HTTP_201_CREATED)
+async def create_product(product: ProductCreate, session: AsyncSession = Depends(db_control.session_dependency)):
+    return await crud.create_product(session, product=product)
+
+
+# @router.patch('/{product_id}', response_model=Product, status_code=status.HTTP_202_ACCEPTED)
+# async def update_product(product: ProductCreate, session: AsyncSession = Depends(db_control.session_dependency)):
+# qwery_product = Depends(src.product.dependens)
+@router.patch('/{product_id}', response_model=Product, status_code=status.HTTP_202_ACCEPTED)
+async def update_product(
+        productUpdate: ProductUpdatePartial,
+        product: Product = Depends(get_product_by_id),
+        session: AsyncSession = Depends(db_control.session_dependency),
+):
+    return await crud.update_product(
+        session=session,
+        product=product,
+        product_up=productUpdate,
+        partial=True,
     )
 
 
-@router.post('/', response_model=Product)
-async def create_product(product: ProductCreate, session: AsyncSession = Depends(db_control.session_dependency)):
-    return await crud.create_product(session, product=product)
+@router.delete('/{product}/', status_code=status.HTTP_204_NO_CONTENT)
+async def delete_product(
+        product: Product = Depends(get_product_by_id),
+        session: AsyncSession = Depends(db_control.session_dependency),
+) -> None:
+    await crud.delete_product(
+        session=session,
+        product=product, )
