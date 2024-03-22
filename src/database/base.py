@@ -10,4 +10,4 @@ class Base(DeclarativeBase):
         return cls.__name__.lower()
 
     id = Column(Integer, primary_key=True)
-    pass
+
