@@ -1,39 +1,41 @@
 from fastapi import APIRouter, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from .dependens import get_product_by_id
+from .dependens import get_user_by_id
 from . import crud
-from .shemas import Product, ProductCreate, ProductUpdatePartial
+from .shemas import User, User_create, User_update
 from src.database import db_control
 
 router = APIRouter(tags=["Products"], prefix='/product')
 
 
-@router.get('/', response_model=list[Product])
+@router.get('/', response_model=list[User])
 async def get_products(session: AsyncSession = Depends(db_control.session_dependency)):
     return await crud.get_products(session=session)
 
 
-@router.get('/{product_id}/', response_model=Product)
+@router.get('/{product_id}/', response_model=User)
 async def get_product(
-        product: Product = Depends(get_product_by_id)):
-    return product
+        user: User = Depends(get_user_by_id)):
+    return user
 
 
-@router.post('/', response_model=Product, status_code=status.HTTP_201_CREATED)
-async def create_product(product: ProductCreate, session: AsyncSession = Depends(db_control.session_dependency)):
-    return await crud.create_product(session, product=product)
+@router.post('/', response_model=User, status_code=status.HTTP_201_CREATED)
+async def create_product(user: User_create, session: AsyncSession = Depends(db_control.session_dependency)):
+    return await crud.create_product(session, product=user)
 
 
-@router.patch('/{product_id}', response_model=Product, status_code=status.HTTP_202_ACCEPTED)
+w @ router.patch('/{product_id}', response_model=User, status_code=status.HTTP_202_ACCEPTED)
+
+
 async def update_product(
-        productUpdate: ProductUpdatePartial,
-        product: Product = Depends(get_product_by_id),
+        userUpdate: User_update,
+        user: User = Depends(get_user_by_id),
         session: AsyncSession = Depends(db_control.session_dependency),
 ):
-    return await crud.update_product(
+    return await crud.update_user(
         session=session,
-        product=product,
-        product_up=productUpdate,
+        user=user,
+        user_up=userUpdate,
         partial=True,
     )
 
