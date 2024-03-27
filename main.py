@@ -3,7 +3,6 @@ from src.product.views import router as product_router
 from src.users.views import router as user_router
 from fastapi import FastAPI
 
-
 # @asynccontextmanager
 # async def lifespan(app: FastAPI):
 #     async with db_control.engine.begin() as conn:
