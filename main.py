@@ -1,5 +1,6 @@
 import uvicorn
 from src.product.views import router as product_router
+from src.users.views import router as user_router
 from fastapi import FastAPI
 
 
@@ -12,6 +13,7 @@ from fastapi import FastAPI
 
 app = FastAPI()
 app.include_router(product_router)
+app.include_router(user_router)
 
 
 @app.get("/")

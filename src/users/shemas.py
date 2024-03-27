@@ -4,7 +4,7 @@ from pydantic import BaseModel, ConfigDict
 class User(BaseModel):
     name: str
     surname: str
-    phonenumber: int
+    phone: str
 
 
 class User_get(User):
@@ -24,4 +24,4 @@ class User_update(User):
     id: int | None = None
     name: str | None = None
     surname: str | None = None
-    phonenumber: int | None = None
+    phone: str | None = None

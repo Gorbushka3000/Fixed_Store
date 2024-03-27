@@ -12,4 +12,4 @@ class Product(Base):
     description: Mapped[str] = mapped_column(String, nullable=True)
     price: Mapped[int] = mapped_column(Integer, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    user: Mapped["User"] = relationship(back_populates='user')
+    user: Mapped["User"] = relationship(back_populates='product')
