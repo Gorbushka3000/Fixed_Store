@@ -8,7 +8,7 @@ from src.database import Base
 from src.database.mixins import UserMixin
 
 if TYPE_CHECKING:
-    from .product import Product
+    from src.database import Product, LikeProductAssociation
 
 
 class Like(UserMixin, Base):
@@ -19,6 +19,11 @@ class Like(UserMixin, Base):
         default=datetime.utcnow()
     )
     products: Mapped[list["Product"]] = relationship(
-        secondary="like_product_association",
-        back_populates="orders",
+        secondary="like_product_association ",
+        back_populates="likes",
     )
+
+    products_details: Mapped[list["LikeProductAssociation"]] = relationship(
+        back_populates='like'
+    )
+

@@ -5,7 +5,7 @@ from src.database.base import Base
 from src.database.mixins import UserMixin
 
 if TYPE_CHECKING:
-    from src.database import Like
+    from src.database import Like, LikeProductAssociation
 
 
 class Product(UserMixin, Base):
@@ -16,5 +16,6 @@ class Product(UserMixin, Base):
     price: Mapped[int] = mapped_column(Integer, nullable=False)
     likes: Mapped[list["Like"]] = relationship(
         secondary="like_product_association",
-        back_populates="orders",
+        back_populates="products",
     )
+    likes_details: Mapped[list[LikeProductAssociation]] = relationship(back_populates="product")
