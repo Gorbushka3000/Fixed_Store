@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from src.database import Base
 
 if TYPE_CHECKING:
-    from src.database import Product, Profile
+    from src.database import Product, Profile, Like
 
 
 class User(Base):
@@ -14,4 +14,5 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(32), nullable=False)
     phone: Mapped[str] = mapped_column(String(32), unique=True)
     product: Mapped[list['Product']] = relationship(back_populates='user')
+    likes: Mapped[list['Like']] = relationship(back_populates='user')
     profile: Mapped['Profile'] = relationship(back_populates='user')
